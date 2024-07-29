@@ -119,6 +119,30 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(product_found.available, product.available)
         self.assertEqual(product_found.category, product.category)        
         
+    def test_update_a_product(self):
+        """Test to update a product"""
+        product = ProductFactory()
+        logging.debug(f"product: {product}")
+        product.id = None
+        product.create()
+        logging.debug(f"product: {product}")
+        self.assertIsNotNone(product.id)
+        new_description = "New description from PHF"
+        product.description = new_description
+        # Assert that it was assigned an id and shows up in the database
+        product_id = product.id
+        product.update()
+        self.assertEqual(product.id, product_id)
+        self.assertEqual(product.description, new_description)
 
+        products = Product.all()
+        self.assertEqual(len(products),1)
+        product_found = products[0]
+        self.assertEqual(product_found.name, product.name)
+        self.assertEqual(product_found.description, product.description)
+        self.assertEqual(Decimal(product_found.price), product.price)
+        self.assertEqual(product_found.available, product.available)
+        self.assertEqual(product_found.category, product.category)
+      
 
 
