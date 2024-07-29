@@ -143,6 +143,16 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(Decimal(product_found.price), product.price)
         self.assertEqual(product_found.available, product.available)
         self.assertEqual(product_found.category, product.category)
+
+    def test_delete_a_product(self):
+        """Test to delete a product"""
+        product = ProductFactory()
+        product.id = None
+        product.create()
+        self.assertEqual(len(Product.all()),1)
+        product.delete()
+        self.assertEqual(len(Product.all()),0)
+
       
 
 
