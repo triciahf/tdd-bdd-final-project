@@ -183,3 +183,45 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(products_found.count(), count)
         for product_found  in products_found:
             self.assertEqual(product_found.name, name)
+
+
+    def test_find_product_by_availability(self):
+        """Test to find a product by availability"""
+        
+        for i in range(10):
+            product = ProductFactory()
+            product.id = None
+            product.create()
+        products = Product.all()    
+
+        first_product = products[0]
+        availability = first_product.available
+        count = 0
+        for item in products:
+            if item.available==availability:
+                count = count + 1
+        products_found = Product.find_by_availability(availability)
+        
+        self.assertEqual(products_found.count(), count)
+        for product_found  in products_found:
+            self.assertEqual(product_found.available, availability)  
+
+    def test_find_by_category (self):
+        """Test to find a products by category"""
+        for i in range(10):
+            product = ProductFactory()
+            product.id = None
+            product.create()
+        products = Product.all()    
+
+        first_product = products[0]
+        category = first_product.category
+        count = 0
+        for item in products:
+            if item.category==category:
+                count = count + 1
+        products_found = Product.find_by_category(category)
+        
+        self.assertEqual(products_found.count(), count)
+        for product_found  in products_found:
+            self.assertEqual(product_found.category, category)         
