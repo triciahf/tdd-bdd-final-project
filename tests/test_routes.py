@@ -167,6 +167,26 @@ class TestProductRoutes(TestCase):
     # ADD YOUR TEST CASES HERE
     #
 
+    def test_get_product(self):
+        """Test to get a product"""
+        test_product = self._create_products()[0]
+        response = self.client.get(f"{BASE_URL}/{test_product.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        product_found = response.get_json()
+        self.assertEqual(product_found["name"], test_product.name)
+        self.assertEqual(product_found["description"], test_product.description)
+        self.assertEqual(Decimal(product_found["price"]), test_product.price)
+        self.assertEqual(product_found["available"], test_product.available)
+        self.assertEqual(product_found["category"], test_product.category.name)
+
+    def test_get_product_not_found(self):
+        """Test to get a product that is not in the db"""
+        response = self.client.get(f"{BASE_URL}/0")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        data = response.get_json()
+        logging.debug(f"data: {data}")
+        self.assertIn("No product found with id 0", data["message"])
+
     ######################################################################
     # Utility functions
     ######################################################################

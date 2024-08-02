@@ -23,6 +23,9 @@ from flask import url_for  # noqa: F401 pylint: disable=unused-import
 from service.models import Product
 from service.common import status  # HTTP Status Codes
 from . import app
+import logging
+
+logger = logging.getLogger("flask.app")
 
 
 ######################################################################
@@ -109,6 +112,17 @@ def create_products():
 #
 # PLACE YOUR CODE HERE TO READ A PRODUCT
 #
+@app.route("/products/<int:product_id>", methods=["GET"])
+def get_products(product_id):
+    """
+    Get a product by its id
+    """
+    logger.debug(f"Getting product {product_id}")
+    product_found = Product.find(product_id)
+    if not product_found:
+        return abort(status.HTTP_404_NOT_FOUND, f"No product found with id {product_id}")
+    logger.debug(f"product retrieved {product_found}")
+    product_found.serialize(), status.HTTP_200_OK
 
 ######################################################################
 # U P D A T E   A   P R O D U C T
@@ -117,6 +131,20 @@ def create_products():
 #
 # PLACE YOUR CODE TO UPDATE A PRODUCT HERE
 #
+@app.route("/products/<int:product_id>", methods=["PUT"])
+def update_product(product_id):
+    """
+    Updates a product
+    """
+    app.logger.info("Request to Update a Product...")
+    check_content_type("application/json")
+
+    data = request.get_json()
+    app.logger.info(f"Processing: {data}")
+    product = Product()
+    product.deserialize(data)
+    product = Product.find_by_id()
+
 
 ######################################################################
 # D E L E T E   A   P R O D U C T
