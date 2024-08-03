@@ -120,9 +120,9 @@ def get_products(product_id):
     logger.debug(f"Getting product {product_id}")
     product_found = Product.find(product_id)
     if not product_found:
-        return abort(status.HTTP_404_NOT_FOUND, f"No product found with id {product_id}")
+        abort(status.HTTP_404_NOT_FOUND, f"No product found with id {product_id}")
     logger.debug(f"product retrieved {product_found}")
-    product_found.serialize(), status.HTTP_200_OK
+    return product_found.serialize(), status.HTTP_200_OK
 
 ######################################################################
 # U P D A T E   A   P R O D U C T
@@ -131,6 +131,7 @@ def get_products(product_id):
 #
 # PLACE YOUR CODE TO UPDATE A PRODUCT HERE
 #
+
 @app.route("/products/<int:product_id>", methods=["PUT"])
 def update_product(product_id):
     """
@@ -141,9 +142,13 @@ def update_product(product_id):
 
     data = request.get_json()
     app.logger.info(f"Processing: {data}")
-    product = Product()
-    product.deserialize(data)
-    product = Product.find_by_id()
+    product_found = Product.find_by_id(product_id)
+    if not product_found:
+        abort(status.HTTP_404_NOT_FOUND, f"No product found with id {product_id}")
+    product_to_update =  product_found.deserialize()
+    product_to_update.
+    return product_found.serialize(), status.HTTP_200_OK
+
 
 
 ######################################################################

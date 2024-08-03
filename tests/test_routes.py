@@ -187,6 +187,21 @@ class TestProductRoutes(TestCase):
         logging.debug(f"data: {data}")
         self.assertIn("No product found with id 0", data["message"])
 
+    def test_update_product(self):
+        """Test to update a prodduct"""
+        test_product = self._create_products()[0]
+        response = self.client.get(f"{BASE_URL}/{test_product.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        product_found = response.get_json()
+        new_description = "new description PHF"
+        product_found["description"] = new_description     
+        update_product_response = self.client.put(f"{BASE_URL}/{test_product.id}", data=product_found)
+        self.assertEqual(update_product_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(update_product_response.get_json()["description"], new_description)
+        
+               
+
+
     ######################################################################
     # Utility functions
     ######################################################################
