@@ -242,8 +242,20 @@ class TestProductRoutes(TestCase):
         response_data = response.get_json()
         self.assertEqual(len(response_data), 5)
 
-    
-
+    def test_list_by_name(self):
+        products = self._create_products(5)
+        name = products[0].name
+        name_count = 0
+        for product in products:
+            if product.name==name:
+                name_count += name_count
+        response = self.client.get(f"{BASE_URL}", params={"name":name})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        products_found = response.get_json()
+        self.assertEqual(products_found.count(), name_count)
+        self.assertEqual(product_found["name"], test_product.name)
+        for product in products_found:
+            self.assertEqual(product["name"], name)
         
     
     ######################################################################
