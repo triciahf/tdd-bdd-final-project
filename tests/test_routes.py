@@ -29,9 +29,11 @@ import logging
 from decimal import Decimal
 from unittest import TestCase
 from service import app
+from urllib.parse import quote_plus
 from service.common import status
 from service.models import db, init_db, Product
 from tests.factories import ProductFactory
+
 
 # Disable all but critical errors during normal test run
 # uncomment for debugging failing tests
@@ -243,19 +245,44 @@ class TestProductRoutes(TestCase):
         self.assertEqual(len(response_data), 5)
 
     def test_list_by_name(self):
+        """Test to list products by a name"""
         products = self._create_products(5)
         name = products[0].name
+        logging.debug(f"name: {name}")
         name_count = 0
         for product in products:
+            logging.debug(f"product.name: {product.name}")
+            
             if product.name==name:
-                name_count += name_count
-        response = self.client.get(f"{BASE_URL}", params={"name":name})
+                logging.debug(f"product found")
+                name_count = name_count +1
+            logging.debug(f"name_count {name_count}")
+        response = self.client.get(f"{BASE_URL}?name={name}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         products_found = response.get_json()
-        self.assertEqual(products_found.count(), name_count)
-        self.assertEqual(product_found["name"], test_product.name)
+        self.assertEqual(len(products_found), name_count)
         for product in products_found:
             self.assertEqual(product["name"], name)
+
+    def test_list_by_catgory(self):
+        """Test to list products by a category"""
+        products = self._create_products(5)
+        category = products[0].category
+        logging.debug(f"category: {category}")
+        category_count = 0
+        for product in products:
+            logging.debug(f"product.category: {product.category}")
+            
+            if product.category==category:
+                logging.debug(f"product found")
+                category_count = category_count +1
+            logging.debug(f"category_count {category_count}")
+        response = self.client.get(f"{BASE_URL}?category={category.name}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        products_found = response.get_json()
+        self.assertEqual(len(products_found), category_count)
+        for product in products_found:
+            self.assertEqual(product["category"], category.name)            
         
     
     ######################################################################
