@@ -112,16 +112,20 @@ def list_products():
     product_list = []
     name = request.args.get("name")
     category = request.args.get("category") 
+    availability = request.args.get("availability") 
     if name:
         logger.debug(f"listing products with name {name}")
         products = Product.find_by_name(name)
-    else:
-        if category:
+    elif category:
             logger.debug(f"listing products with category {category}")
             category_enum = getattr(Category, category.upper())
             products = Product.find_by_category(category_enum)
-        else:
-            products = Product.all()
+    elif availability:
+        logger.debug(f"listing products with availability {availability}")
+        products = Product.find_by_availability(availability)
+    else:
+        logger.debug(f"listing all products")
+        products = Product.all()
     
     for product in products:
         product_list.append(product.serialize())
