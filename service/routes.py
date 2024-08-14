@@ -43,6 +43,7 @@ def healthcheck():
 @app.route("/")
 def index():
     """Base URL for our service"""
+    logger.debug("home page")
     return app.send_static_file("index.html")
 
 
@@ -111,22 +112,22 @@ def list_products():
 
     product_list = []
     name = request.args.get("name")
-    category = request.args.get("category") 
-    availability = request.args.get("availability") 
+    category = request.args.get("category")
+    availability = request.args.get("availability")
     if name:
         logger.debug(f"listing products with name {name}")
         products = Product.find_by_name(name)
     elif category:
-            logger.debug(f"listing products with category {category}")
-            category_enum = getattr(Category, category.upper())
-            products = Product.find_by_category(category_enum)
+        logger.debug(f"listing products with category {category}")
+        category_enum = getattr(Category, category.upper())
+        products = Product.find_by_category(category_enum)
     elif availability:
         logger.debug(f"listing products with availability {availability}")
         products = Product.find_by_availability(availability)
     else:
-        logger.debug(f"listing all products")
+        logger.debug("listing all products")
         products = Product.all()
-    
+
     for product in products:
         product_list.append(product.serialize())
     return product_list, status.HTTP_200_OK
@@ -135,9 +136,7 @@ def list_products():
 # R E A D   A   P R O D U C T
 ######################################################################
 
-#
-# PLACE YOUR CODE HERE TO READ A PRODUCT
-#
+
 @app.route("/products/<int:product_id>", methods=["GET"])
 def get_products(product_id):
     """
@@ -154,9 +153,6 @@ def get_products(product_id):
 # U P D A T E   A   P R O D U C T
 ######################################################################
 
-#
-# PLACE YOUR CODE TO UPDATE A PRODUCT HERE
-#
 
 @app.route("/products/<int:product_id>", methods=["PUT"])
 def update_product(product_id):
@@ -171,19 +167,15 @@ def update_product(product_id):
     product_found = Product.find(product_id)
     if not product_found:
         abort(status.HTTP_404_NOT_FOUND, f"No product found with id {product_id}")
-    product_found_deserializable =  product_found.deserialize(data)
+    product_found_deserializable = product_found.deserialize(data)
     product_found_deserializable.update()
     return product_found_deserializable.serialize(), status.HTTP_200_OK
 
 
-
-######################################################################
+####################################################
 # D E L E T E   A   P R O D U C T
 ######################################################################
 
-#
-# PLACE YOUR CODE TO DELETE A PRODUCT HERE
-#
 
 @app.route("/products/<int:product_id>", methods=["DELETE"])
 def delete_product(product_id):

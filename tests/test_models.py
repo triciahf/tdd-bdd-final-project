@@ -27,7 +27,7 @@ import os
 import logging
 import unittest
 from decimal import Decimal
-from service.models import Product, Category, db
+from service.models import Product, Category, db, DataValidationError
 from service import app
 from tests.factories import ProductFactory
 
@@ -144,6 +144,22 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(product_found.available, product.available)
         self.assertEqual(product_found.category, product.category)
 
+    def test_update_a_product_no_od(self):
+        """Test to update a product without an id"""
+        product = ProductFactory()
+        logging.debug(f"product: {product}")
+        product.id = None
+        product.create()
+        logging.debug(f"product: {product}")
+        self.assertIsNotNone(product.id)
+        new_description = "New description from PHF"
+        product.description = new_description
+        # Assert that it was assigned an id and shows up in the database
+        product.id = None
+        with self.assertRaises(DataValidationError):
+            product.update()
+        
+
     def test_delete_a_product(self):
         """Test to delete a product"""
         product = ProductFactory()
@@ -223,3 +239,46 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(products_found.count(), count)
         for product_found in products_found:
             self.assertEqual(product_found.category, category)
+
+    def test_deserialize (self):
+        """Test to deserialize a product"""
+        product = ProductFactory()
+        product_serializable = product.serialize()
+        self.assertEqual(product_serializable["id"], product.id)
+        self.assertEqual(product_serializable["name"], product.name)
+        self.assertEqual(product_serializable["description"], product.description)
+        self.assertEqual(Decimal(product_serializable["price"]), product.price)
+        self.assertEqual(product_serializable["available"], product.available)
+        self.assertEqual(product_serializable["category"], product.category.name)
+        product_deserializable = product.deserialize(product_serializable)
+        self.assertEqual(product_serializable["id"], product_deserializable.id)
+        self.assertEqual(product_serializable["name"], product_deserializable.name)
+        self.assertEqual(product_serializable["description"], product_deserializable.description)
+        self.assertEqual(Decimal(product_serializable["price"]), product_deserializable.price)
+        self.assertEqual(product_serializable["available"], product_deserializable.available)
+        self.assertEqual(product_serializable["category"], product_deserializable.category.name)        
+        
+
+    def test_deserialize_wrong_availability (self):
+        """Test to deserialize a product with wrong availability value"""
+        product = ProductFactory()
+        product_serializable = product.serialize()
+        product_serializable["available"]="no boolean"
+        with self.assertRaises(DataValidationError): 
+            product_deserializable = product.deserialize(product_serializable)
+
+    def test_deserialize_invalid_attribute (self):
+        """Test to deserialize a product with invalid attribute"""
+        product = ProductFactory()
+        product_serializable = product.serialize()
+        product_serializable["category"]="wrong category"
+        with self.assertRaises(DataValidationError): 
+            product_deserializable = product.deserialize(product_serializable)
+
+    def test_deserialize_invalid_product (self):
+        """Test to deserialize a product with invalid product"""
+        product = ProductFactory()
+        product_serializable = product.serialize()
+        product_serializable["category"]=None
+        with self.assertRaises(DataValidationError): 
+            product_deserializable = product.deserialize(product_serializable)            
