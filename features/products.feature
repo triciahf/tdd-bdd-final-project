@@ -38,3 +38,101 @@ Scenario: Create a Product
     And I should see "True" in the "Available" dropdown
     And I should see "Tools" in the "Category" dropdown
     And I should see "34.95" in the "Price" field
+
+Scenario: Read a Produt
+    When I vist the "Home Page"
+    And I set the "Name" to "Hat"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see the message "Success"
+    And I should see "Hat" in the "Name" field
+    And I should see "A red fedora" in the "Description" field
+    And I should see "True" in the "Available" dropdown
+    And I should see "Cloths" in the "Category" dropdown
+    And I should see "59.95" in the "Price" field
+
+Scenario: Update a Product
+    When I vist the "Home Page"
+    And I set the "Name" to "Shoes"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Blue shoes" in the "Description" field
+    When I change the value of the "Description" field to "Red shoes"
+    And I press the "update" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see the message "Success"
+    And I should see "Red shoes" in the "Description" field
+    When I press the "Clear" button
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see a row with "Shoes" in the "Name" column and "Red shoes" in the "Description" column
+    And I should not see a row with "Shoes" in the "Name" column and "Blue shoes" in the "Description" column
+ 
+Scenario: Delete a Produt
+    When I vist the "Home Page"
+    And I set the "Name" to "Hat"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Hat" in the "Name" field
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Delete" button
+    Then I should see the message "Product has been Deleted!"
+    When I press the "Clear" button
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should not see a row with "Hat" in the "Name" column
+
+Scenario: List all products
+    When I vist the "Home Page"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should not see a row with "Hat" in the "Name" column
+    And I should not see a row with "Shoes" in the "Name" column
+    And I should not see a row with "Big Mac" in the "Name" column
+    And I should not see a row with "Sheets" in the "Name" column
+    
+Scenario: Search by catergory
+    When I vist the "Home Page"
+    And I press the "Clear" button
+    Then I should see the message "Success"
+    When I set the "category" to "Food"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should not see a row with "Hat" in the "Name" column
+    And I should not see a row with "Shoes" in the "Name" column
+    And I should see a row with "Big Mac" in the "Name" column
+    And I should not see a row with "Sheets" in the "Name" column
+
+Scenario: Search by available
+    When I vist the "Home Page"
+    And I press the "Clear" button
+    Then I should see the message "Success"
+    When I set the "available" to "True"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see a row with "Hat" in the "Name" column
+    And I should not see a row with "Shoes" in the "Name" column
+    And I should see a row with "Big Mac" in the "Name" column
+    And I should see a row with "Sheets" in the "Name" column
+
+Scenario: Search by catergory
+    When I vist the "Home Page"
+    And I press the "Clear" button
+    Then I should see the message "Success"
+    When I set the "name" to "Hat"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see a row with "Hat" in the "Name" column
+    And I should not see a row with "Shoes" in the "Name" column
+    And I should not see a row with "Big Mac" in the "Name" column
+    And I should not see a row with "Sheets" in the "Name" column

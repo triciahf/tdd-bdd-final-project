@@ -104,7 +104,25 @@ def step_impl(context, element_name):
 # to get the element id of any button
 ##################################################################
 
-## UPDATE CODE HERE ##
+@when('I press the "{button}" button')
+def step_impl(context, button):
+    button_id = f"{button.lower()}-btn"
+    element = context.driver.find_element_by_id(button_id)
+    element.click()
+
+@then('I should see "{name}" in the results')
+def step_impl(context, name):
+    element = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.presence_of_element_located((By.ID, "search_results"))
+    )
+
+    element = context.driver.find_element_by_id("name")
+
+    assert(name in element.text)
+
+    # Use the WebDriverWait to wait for the specified name to be present in the element with the ID 'search_results
+    # Check if the provided name is present in the text content of the element using the expected_conditions.text_to_be_present_in_element method
+    # Use the assert(found) statement to verify the name was found in the results.    
 
 ##################################################################
 # This code works because of the following naming convention:
