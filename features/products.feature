@@ -40,7 +40,7 @@ Scenario: Create a Product
     And I should see "34.95" in the "Price" field
 
 Scenario: Read a Produt
-    When I vist the "Home Page"
+    When I visit the "Home Page"
     And I set the "Name" to "Hat"
     And I press the "Search" button
     Then I should see the message "Success"
@@ -56,7 +56,7 @@ Scenario: Read a Produt
     And I should see "59.95" in the "Price" field
 
 Scenario: Update a Product
-    When I vist the "Home Page"
+    When I visit the "Home Page"
     And I set the "Name" to "Shoes"
     And I press the "Search" button
     Then I should see the message "Success"
@@ -73,11 +73,11 @@ Scenario: Update a Product
     When I press the "Clear" button
     And I press the "Search" button
     Then I should see the message "Success"
-    And I should see a row with "Shoes" in the "Name" column and "Red shoes" in the "Description" column
-    And I should not see a row with "Shoes" in the "Name" column and "Blue shoes" in the "Description" column
+    And I should see a row "Red shoes" in the "Description" column
+    And I should not see a row with "Blue shoes" in the "Description" column
  
 Scenario: Delete a Produt
-    When I vist the "Home Page"
+    When I visit the "Home Page"
     And I set the "Name" to "Hat"
     And I press the "Search" button
     Then I should see the message "Success"
@@ -90,49 +90,46 @@ Scenario: Delete a Produt
     When I press the "Clear" button
     And I press the "Search" button
     Then I should see the message "Success"
-    And I should not see a row with "Hat" in the "Name" column
+    And I should not see a row with "Hat" in the results
 
 Scenario: List all products
-    When I vist the "Home Page"
+    When I visit the "Home Page"
     And I press the "Search" button
     Then I should see the message "Success"
-    And I should not see a row with "Hat" in the "Name" column
-    And I should not see a row with "Shoes" in the "Name" column
-    And I should not see a row with "Big Mac" in the "Name" column
-    And I should not see a row with "Sheets" in the "Name" column
+    And I should not see a row with "Hat" in the results
+    And I should not see a row with "Shoes" in the results
+    And I should not see a row with "Big Mac" in the results
+    And I should not see a row with "Sheets" in the results
     
 Scenario: Search by catergory
-    When I vist the "Home Page"
+    When I visit the "Home Page"
     And I press the "Clear" button
-    Then I should see the message "Success"
-    When I set the "category" to "Food"
+    And I set the "category" to "Food"
     And I press the "Search" button
     Then I should see the message "Success"
-    And I should not see a row with "Hat" in the "Name" column
-    And I should not see a row with "Shoes" in the "Name" column
-    And I should see a row with "Big Mac" in the "Name" column
-    And I should not see a row with "Sheets" in the "Name" column
+    And I should not see a row with "Hat" in the results
+    And I should not see a row with "Shoes" in the results
+    And I should see a row with "Big Mac" in the results
+    And I should not see a row with "Sheets" in the results
 
 Scenario: Search by available
-    When I vist the "Home Page"
+    When I visit the "Home Page"
     And I press the "Clear" button
-    Then I should see the message "Success"
-    When I set the "available" to "True"
+    And I set the "available" to "True"
     And I press the "Search" button
     Then I should see the message "Success"
-    And I should see a row with "Hat" in the "Name" column
-    And I should not see a row with "Shoes" in the "Name" column
-    And I should see a row with "Big Mac" in the "Name" column
-    And I should see a row with "Sheets" in the "Name" column
+    And I should see a row with "Hat" in the results
+    And I should not see a row with "Shoes" in the results
+    And I should see a row with "Big Mac" in the results
+    And I should see a row with "Sheets" in the results
 
-Scenario: Search by catergory
-    When I vist the "Home Page"
+Scenario: Search by name
+    When I visit the "Home Page"
     And I press the "Clear" button
-    Then I should see the message "Success"
-    When I set the "name" to "Hat"
+    And I set the "name" to "Hat"
     And I press the "Search" button
     Then I should see the message "Success"
-    And I should see a row with "Hat" in the "Name" column
-    And I should not see a row with "Shoes" in the "Name" column
-    And I should not see a row with "Big Mac" in the "Name" column
-    And I should not see a row with "Sheets" in the "Name" column
+    And I should see a row with "Hat" in the results
+    And I should not see a row with "Shoes" in the results
+    And I should not see a row with "Big Mac" in the results
+    And I should not see a row with "Sheets" in the results

@@ -110,19 +110,37 @@ def step_impl(context, button):
     element = context.driver.find_element_by_id(button_id)
     element.click()
 
-@then('I should see "{name}" in the results')
-def step_impl(context, name):
+@then('I should see a row with {value} in the results')
+def step_impl(context, value):
+
+    search_results = WebDriverWait(context.driver, context.wait_seconds).until(
+            expected_conditions.presence_of_element_located((By.ID, search_results))
+        )
+
+    logging.info(f"search_results: {search_results}")    
     element = WebDriverWait(context.driver, context.wait_seconds).until(
-        expected_conditions.presence_of_element_located((By.ID, "search_results"))
+        expected_conditions.text_to_be_present_in_element((By.ID, "search_results"), value)
     )
 
-    element = context.driver.find_element_by_id("name")
+    assert(element_found)
 
-    assert(name in element.text)
+@then('I should not see a row with {value} in the results')
+def step_impl(context, value):
 
-    # Use the WebDriverWait to wait for the specified name to be present in the element with the ID 'search_results
-    # Check if the provided name is present in the text content of the element using the expected_conditions.text_to_be_present_in_element method
-    # Use the assert(found) statement to verify the name was found in the results.    
+    search_results = WebDriverWait(context.driver, context.wait_seconds).until(
+            expected_conditions.presence_of_element_located((By.ID, search_results))
+        )    
+
+    assert(value not in element_found)
+
+@then('I should see the message "{message}"')
+def step_impl(context, message):
+    element_found = WebDriverWait(context.driver, context.wait_seconds).until(
+        expected_conditions.text_to_be_present_in_element((By.ID, "flash_message"), message)
+    )
+    assert(element_found)
+
+
 
 ##################################################################
 # This code works because of the following naming convention:
@@ -142,7 +160,7 @@ def step_impl(context, text_string, element_name):
     )
     assert(found)
 
-@when('I change "{element_name}" to "{text_string}"')
+@when('I change the value of the "{element_name}" field to "{text_string}"')
 def step_impl(context, element_name, text_string):
     element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
     element = WebDriverWait(context.driver, context.wait_seconds).until(
