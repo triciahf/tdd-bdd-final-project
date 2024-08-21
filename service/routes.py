@@ -78,6 +78,7 @@ def create_products():
     Creates a Product
     This endpoint will create a Product based the data in the body that is posted
     """
+
     app.logger.info("Request to Create a Product...")
     check_content_type("application/json")
 
