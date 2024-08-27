@@ -158,10 +158,10 @@ class TestProductModel(unittest.TestCase):
         product.id = None
         with self.assertRaises(DataValidationError):
             product.update()
-        
 
     def test_delete_a_product(self):
         """Test to delete a product"""
+
         product = ProductFactory()
         product.id = None
         product.create()
@@ -173,7 +173,7 @@ class TestProductModel(unittest.TestCase):
         """Test to list all products"""
         products = Product.all()
         self.assertEqual(len(products), 0)
-        for i in range(5):
+        for _ in range(5):
             product = ProductFactory()
             product.id = None
             product.create()
@@ -182,7 +182,7 @@ class TestProductModel(unittest.TestCase):
     def test_find_product_by_name(self):
         """Test to find a product by name"""
 
-        for i in range(5):
+        for _ in range(5):
             product = ProductFactory()
             product.id = None
             product.create()
@@ -202,7 +202,7 @@ class TestProductModel(unittest.TestCase):
 
     def test_find_product_by_availability(self):
         """Test to find a product by availability"""
-        for i in range(10):
+        for _ in range(10):
             product = ProductFactory()
             product.id = None
             product.create()
@@ -222,7 +222,7 @@ class TestProductModel(unittest.TestCase):
 
     def test_find_by_category(self):
         """Test to find a products by category"""
-        for i in range(10):
+        for _ in range(10):
             product = ProductFactory()
             product.id = None
             product.create()
@@ -240,8 +240,9 @@ class TestProductModel(unittest.TestCase):
         for product_found in products_found:
             self.assertEqual(product_found.category, category)
 
-    def test_deserialize (self):
+    def test_deserialize(self):
         """Test to deserialize a product"""
+
         product = ProductFactory()
         product_serializable = product.serialize()
         self.assertEqual(product_serializable["id"], product.id)
@@ -256,29 +257,31 @@ class TestProductModel(unittest.TestCase):
         self.assertEqual(product_serializable["description"], product_deserializable.description)
         self.assertEqual(Decimal(product_serializable["price"]), product_deserializable.price)
         self.assertEqual(product_serializable["available"], product_deserializable.available)
-        self.assertEqual(product_serializable["category"], product_deserializable.category.name)        
-        
+        self.assertEqual(product_serializable["category"], product_deserializable.category.name)
 
-    def test_deserialize_wrong_availability (self):
+    def test_deserialize_wrong_availability(self):
         """Test to deserialize a product with wrong availability value"""
+
         product = ProductFactory()
         product_serializable = product.serialize()
-        product_serializable["available"]="no boolean"
-        with self.assertRaises(DataValidationError): 
-            product_deserializable = product.deserialize(product_serializable)
+        product_serializable["available"] = "no boolean"
+        with self.assertRaises(DataValidationError):
+            product.deserialize(product_serializable)
 
-    def test_deserialize_invalid_attribute (self):
+    def test_deserialize_invalid_attribute(self):
         """Test to deserialize a product with invalid attribute"""
-        product = ProductFactory()
-        product_serializable = product.serialize()
-        product_serializable["category"]="wrong category"
-        with self.assertRaises(DataValidationError): 
-            product_deserializable = product.deserialize(product_serializable)
 
-    def test_deserialize_invalid_product (self):
-        """Test to deserialize a product with invalid product"""
         product = ProductFactory()
         product_serializable = product.serialize()
-        product_serializable["category"]=None
-        with self.assertRaises(DataValidationError): 
-            product_deserializable = product.deserialize(product_serializable)            
+        product_serializable["category"] = "wrong category"
+        with self.assertRaises(DataValidationError):
+            product.deserialize(product_serializable)
+
+    def test_deserialize_invalid_product(self):
+        """Test to deserialize a product with invalid product"""
+
+        product = ProductFactory()
+        product_serializable = product.serialize()
+        product_serializable["category"] = None
+        with self.assertRaises(DataValidationError):
+            product.deserialize(product_serializable)

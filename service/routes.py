@@ -18,12 +18,13 @@
 """
 Product Store Service with UI
 """
+import logging
 from flask import jsonify, request, abort
 from flask import url_for  # noqa: F401 pylint: disable=unused-import
 from service.models import Product, Category
 from service.common import status  # HTTP Status Codes
 from . import app
-import logging
+
 
 logger = logging.getLogger("flask.app")
 
@@ -109,24 +110,24 @@ def create_products():
 @app.route("/products", methods=["GET"])
 def list_products():
     """List products"""
-    logger.debug("Listing products")
+    logger.info("Listing products")
 
     product_list = []
     name = request.args.get("name")
     category = request.args.get("category")
     availability = request.args.get("availability")
     if name:
-        logger.debug(f"listing products with name {name}")
+        logger.info(f"listing products with name {name}")
         products = Product.find_by_name(name)
     elif category:
-        logger.debug(f"listing products with category {category}")
+        logger.info(f"listing products with category {category}")
         category_enum = getattr(Category, category.upper())
         products = Product.find_by_category(category_enum)
     elif availability:
-        logger.debug(f"listing products with availability {availability}")
+        logger.info(f"listing products with availability {availability}")
         products = Product.find_by_availability(availability)
     else:
-        logger.debug("listing all products")
+        logger.info("listing all products")
         products = Product.all()
 
     for product in products:
@@ -143,11 +144,11 @@ def get_products(product_id):
     """
     Get a product by its id
     """
-    logger.debug(f"Getting product {product_id}")
+    logger.info(f"Getting product {product_id}")
     product_found = Product.find(product_id)
     if not product_found:
         abort(status.HTTP_404_NOT_FOUND, f"No product found with id {product_id}")
-    logger.debug(f"product retrieved {product_found}")
+    logger.info(f"product retrieved {product_found}")
     return product_found.serialize(), status.HTTP_200_OK
 
 ######################################################################
