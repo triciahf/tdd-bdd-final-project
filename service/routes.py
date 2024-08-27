@@ -96,7 +96,7 @@ def create_products():
     # Uncomment this line of code once you implement READ A PRODUCT
     #
     location_url = url_for("get_products", product_id=product.id, _external=True)
-    location_url = "/"  # delete once READ is implemented
+    
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
 
@@ -115,7 +115,7 @@ def list_products():
     product_list = []
     name = request.args.get("name")
     category = request.args.get("category")
-    availability = request.args.get("availability")
+    availability = request.args.get("available")
     if name:
         logger.info(f"listing products with name {name}")
         products = Product.find_by_name(name)

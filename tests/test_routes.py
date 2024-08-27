@@ -131,6 +131,16 @@ class TestProductRoutes(TestCase):
         self.assertEqual(new_product["available"], test_product.available)
         self.assertEqual(new_product["category"], test_product.category.name)
 
+        # Check that the location header was correct
+        response = self.client.get(location)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        new_product = response.get_json()
+        self.assertEqual(new_product["name"], test_product.name)
+        self.assertEqual(new_product["description"], test_product.description)
+        self.assertEqual(Decimal(new_product["price"]), test_product.price)
+        self.assertEqual(new_product["available"], test_product.available)
+        self.assertEqual(new_product["category"], test_product.category.name)        
+
     def test_create_product_with_no_name(self):
         """It should not Create a Product without a name"""
         product = self._create_products()[0]
@@ -270,18 +280,22 @@ class TestProductRoutes(TestCase):
 
     def test_list_by_availability(self):
         """Test to list products by the availability"""
-        products = self._create_products(5)
+        products = self._create_products(10)
         availability = products[0].available
         logging.debug(f"availability: {availability}")
         availability_count = 0
         for product in products:
             logging.debug(f"product.available: {product.available}")
+            logging.debug(f"product.name: {product.name}")
 
             if product.available == availability:
                 logging.debug("product found")
                 availability_count = availability_count + 1
             logging.debug(f"availability_count {availability_count}")
-        response = self.client.get(f"{BASE_URL}?availability={availability}")
+        response = self.client.get(f"{BASE_URL}?available={availability}")
+
+        logging.debug(f"response: {response.get_json()}")
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         products_found = response.get_json()
         self.assertEqual(len(products_found), availability_count)
