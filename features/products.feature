@@ -112,4 +112,18 @@ Scenario: Search by name
     And I should see "Hat" in the results
     And I should not see "Shoes" in the results
     And I should not see "Big Mac" in the results
-    And I should not see "Sheets" in the results    
+    And I should not see "Sheets" in the results
+
+Scenario: Update a Product
+    When I visit the "Home Page"
+    And I press the "Clear" button
+    And I set the "Name" to "Hat"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "Hat" in the results
+    When I set the "description" to "A blue fedora"
+    And I press the "Update" button 
+    Then I should see the message "Success"
+
+
+
