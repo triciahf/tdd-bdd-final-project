@@ -112,21 +112,21 @@ def step_impl(context, button):
     element = context.driver.find_element_by_id(button_id)
     element.click()
 
-@then('I should see {value} in the results')
+@then('I should see "{value}" in the results')
 def step_impl(context, value):
 
     search_results = WebDriverWait(context.driver, context.wait_seconds).until(
             expected_conditions.presence_of_element_located((By.ID, "search_results")))
         
-    assert(search_results.text.find(value))
+    assert(search_results.text.find(value) > 0)
 
-@then('I should not see {value} in the results')
+@then('I should not see "{value}" in the results')
 def step_impl(context, value):
 
     search_results = WebDriverWait(context.driver, context.wait_seconds).until(
             expected_conditions.presence_of_element_located((By.ID, "search_results")))
-        
-    assert(not search_results.text.find(value))
+
+    assert(search_results.text.find(value) < 0)
 
 @then('I should see the message "{message}"')
 def step_impl(context, message):

@@ -139,7 +139,7 @@ class TestProductRoutes(TestCase):
         self.assertEqual(new_product["description"], test_product.description)
         self.assertEqual(Decimal(new_product["price"]), test_product.price)
         self.assertEqual(new_product["available"], test_product.available)
-        self.assertEqual(new_product["category"], test_product.category.name)        
+        self.assertEqual(new_product["category"], test_product.category.name)
 
     def test_create_product_with_no_name(self):
         """It should not Create a Product without a name"""
