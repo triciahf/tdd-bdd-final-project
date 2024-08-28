@@ -121,9 +121,22 @@ Scenario: Update a Product
     And I press the "Search" button
     Then I should see the message "Success"
     And I should see "Hat" in the results
-    When I set the "description" to "A blue fedora"
+    When I set the "Description" to "A blue fedora"
     And I press the "Update" button 
     Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see the message "Success"
+    And I should see "A blue fedora" in the "Description" field
+    When I press the "Clear" button
+    And I set the "Name" to "Hat"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "A blue fedora" in the results
+    And I should not see "A red fedora" in the results
+
 
 
 

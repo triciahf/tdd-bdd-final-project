@@ -117,7 +117,7 @@ def step_impl(context, value):
 
     search_results = WebDriverWait(context.driver, context.wait_seconds).until(
             expected_conditions.presence_of_element_located((By.ID, "search_results")))
-        
+    
     assert(search_results.text.find(value) > 0)
 
 @then('I should not see "{value}" in the results')
